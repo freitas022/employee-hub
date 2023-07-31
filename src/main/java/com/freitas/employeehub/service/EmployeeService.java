@@ -1,8 +1,11 @@
 package com.freitas.employeehub.service;
 
+import java.util.List;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +20,10 @@ public class EmployeeService {
     @Autowired
     private EmployeeRepository employeeRepository;
 
-    public Page<EmployeeDTO> findAll(Pageable pageable) {
-        Page<EmployeeModel> result = employeeRepository.findAll(pageable);
-        return result.map(EmployeeDTO::new);
+    public List<EmployeeDTO> findAll(int page, int pageSize) {
+        Pageable request = PageRequest.of(page, pageSize);
+        Page<EmployeeModel> result = employeeRepository.findAll(request);
+        return result.stream().map(EmployeeDTO::new).toList();
     }
 
     public EmployeeDTO findById(Long id) {
